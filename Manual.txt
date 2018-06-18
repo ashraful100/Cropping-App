@@ -1,0 +1,18 @@
+Please read the manual first, before you use this application
+
+Step 1) In case you want crop objets only from one picture, select the picture by following:
+
+		File->Open File
+
+       Or in case you want to crop objects from more the one picture, then select the image folder by following:
+		File->Open Folder
+
+Step 2) Then select the folder, where you want to save the cropped objects, otherwise these will be saved in the project working directory. To chose the folder click "Select Save Folder" which can be found at the bottom right of the main window.
+
+Step 3) Then to crop your object by mouse right clicking whereever you want on the image display. In case if you want to get to know of pixel position at any point, just click "Left button" of mouse and read information from the below left of the main window.
+
+Step 4) To save each object click "Save" button or to ignore click "Cancel" button on the corresponding object's window.
+
+Step 5) When cropping from one image is finished or you want to go to next image or previous image, click "Next" or "Previous" button.
+
+Step 6) And finally to close the window safely, from the menu bar click "File" and then "Exit".
