@@ -6,6 +6,7 @@
 #include <QMouseEvent>
 #include <QPoint>
 #include <QRect>
+#include <QPainter>
 
 class MyQLabel : public QLabel
 {
@@ -37,6 +38,8 @@ protected:
     void mouseDoubleClickEvent(QMouseEvent *mouseEvent);
     void mouseReleaseEvent(QMouseEvent *mouseEvent);
     void mouseMoveEvent(QMouseEvent *mouseEvent);
+
+//    void paintEvent(QPaintEvent *ePaint);
 };
 
 #endif // MYQLABEL_H

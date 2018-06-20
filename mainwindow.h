@@ -10,6 +10,7 @@
 #include <iostream>
 #include <QShortcut>
 #include <QObject>
+#include <QScrollBar>
 
 #include "displayobject.h"
 #include "manual.h"
@@ -40,6 +41,9 @@ private:
     string savePath;
     displayObject *_object;
     int objCount = 0;
+    double scaleFactor;
+    int labelWidth, labelHeight;
+    QRect rect;
 
 public slots:
     void slotMouseSingleClicked(QMouseEvent *mouseEvent);
@@ -55,6 +59,14 @@ private slots:
     void on_previous_clicked();    
     void on_SelectSaveFolder_clicked();    
     void on_actionRead_Manual_triggered();
+    void on_actionZoom_In_triggered();
+    void scaleImage(double factor);
+    void adjustScrollBar(QScrollBar *scrollBar, double factor);
+
+    void on_actionZoom_Out_triggered();
+    void on_actionNormal_Size_triggered();
+
+
 };
 
 #endif // MAINWINDOW_H

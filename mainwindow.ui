@@ -20,50 +20,41 @@
       <property name="styleSheet">
        <string notr="true">background-color: rgb(204, 204, 204);</string>
       </property>
-      <layout class="QGridLayout" name="gridLayout_2">
-       <item row="0" column="0" colspan="4">
-        <widget class="QLabel" name="imgName">
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>20</height>
-          </size>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
+      <layout class="QGridLayout" name="gridLayout">
        <item row="1" column="0" colspan="4">
-        <widget class="QFrame" name="frame">
-         <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
+        <widget class="QScrollArea" name="scrollArea">
+         <property name="widgetResizable">
+          <bool>true</bool>
          </property>
-         <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
-         </property>
-         <layout class="QGridLayout" name="gridLayout">
-          <item row="0" column="0">
-           <widget class="MyQLabel" name="imgLabel">
-            <property name="styleSheet">
-             <string notr="true">background-color: rgb(240, 240, 240);</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <widget class="QWidget" name="scrollAreaWidgetContents">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>547</width>
+            <height>338</height>
+           </rect>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_2">
+           <item row="0" column="0">
+            <widget class="MyQLabel" name="imgLabel">
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(240, 240, 240);</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </item>
        <item row="2" column="0">
         <widget class="QLabel" name="description">
          <property name="minimumSize">
           <size>
-           <width>250</width>
+           <width>0</width>
            <height>0</height>
           </size>
          </property>
@@ -90,12 +81,28 @@
         <widget class="QPushButton" name="SelectSaveFolder">
          <property name="minimumSize">
           <size>
-           <width>120</width>
+           <width>0</width>
            <height>0</height>
           </size>
          </property>
          <property name="text">
           <string>Select Save Folder</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="4">
+        <widget class="QLabel" name="imgName">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
+         </property>
+         <property name="text">
+          <string/>
          </property>
         </widget>
        </item>
@@ -127,7 +134,16 @@
     </property>
     <addaction name="actionRead_Manual"/>
    </widget>
+   <widget class="QMenu" name="menuZoom">
+    <property name="title">
+     <string>Zoom</string>
+    </property>
+    <addaction name="actionZoom_In"/>
+    <addaction name="actionZoom_Out"/>
+    <addaction name="actionNormal_Size"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuZoom"/>
    <addaction name="menuRead_Manual"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -157,6 +173,21 @@
   <action name="actionRead_Manual">
    <property name="text">
     <string>Read Manual</string>
+   </property>
+  </action>
+  <action name="actionZoom_In">
+   <property name="text">
+    <string>Zoom In (+)</string>
+   </property>
+  </action>
+  <action name="actionZoom_Out">
+   <property name="text">
+    <string>Zoom Out (-)</string>
+   </property>
+  </action>
+  <action name="actionNormal_Size">
+   <property name="text">
+    <string>Normal Size</string>
    </property>
   </action>
  </widget>

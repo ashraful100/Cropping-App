@@ -75,10 +75,23 @@ void MyQLabel::mouseMoveEvent(QMouseEvent *mouseEvent)
 
         // Emit the signal and send the rectangle defined by mouse movement:
         emit signalMouseMovedWithRightClickDown(rightClickRectangleMoved);
+//        update();
     }
 
     // Emit the signal of mouse movement (independent of mouse keys)...:
     emit signalMouseMoved(mouseEvent);
-
 }
+
+//void MyQLabel::paintEvent(QPaintEvent *ePaint)
+//{
+//    QPainter paint;
+//    paint.begin(this);
+//    paint.setBrush(Qt::blue);
+//    paint.setPen(Qt::blue);
+//    paint.setOpacity(0.5); // Between 0 and 1.
+
+//    paint.drawRect(rightClickRectangleMoved);
+//    paint.end();
+
+//}
 

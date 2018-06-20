@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->setWindowTitle("Snipping App");
+    this->setWindowTitle("Cropping App");
     this->setWindowIcon(QIcon("icon.ico"));
 
     ui->imgLabel->setScaledContents(true);
@@ -31,6 +31,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionOpen_File->setShortcut(QKeySequence(tr("Ctrl+o")));
     ui->actionOpen_Folder->setShortcut(QKeySequence(tr("Ctrl+Shift+o")));
     ui->actionExit->setShortcut(QKeySequence(Qt::Key_Escape));
+
+    ui->actionZoom_In->setDisabled(true);
+    ui->actionZoom_Out->setDisabled(true);
+
+    ui->actionZoom_In->setShortcut(QKeySequence(Qt::Key_Up));
+    ui->actionZoom_Out->setShortcut(QKeySequence(Qt::Key_Down));
+
+    scaleFactor=1;    
 }
 
 MainWindow::~MainWindow()
@@ -51,6 +59,7 @@ void MainWindow::on_actionOpen_File_triggered()
         image = QImage(dir1);
         image_path = dir1.toLocal8Bit().constData();
         ui->imgLabel->setPixmap(QPixmap::fromImage(image));
+//        ui->imgLabel->setPixmap(QPixmap::fromImage(image).scaled(ui->imgLabel->width(),ui->imgLabel->height(),Qt::KeepAspectRatio));
         QString size = " (" + QString::number(image.width()) + "," + QString::number(image.height()) + ")";
         ui->imgName->setText("Now Displaying: " + dir1 + size);
 
@@ -59,8 +68,16 @@ void MainWindow::on_actionOpen_File_triggered()
 
         connect(ui->imgLabel,SIGNAL(signalMouseMovedWithRightClickDown(QRect)),this,SLOT(slotMouseMovedWithRightClickDown(QRect)));
         connect(ui->imgLabel,SIGNAL(signalNewRectangle(QRect)),this,SLOT(slotNewRectangleReceived(QRect)));
+
+        ui->actionZoom_In->setDisabled(false);
+        ui->actionZoom_Out->setDisabled(false);
+
+        labelWidth=image.width();
+        labelHeight=image.height();
     }
     ui->next->setDisabled(true);
+
+
 }
 
 void MainWindow::on_actionOpen_Folder_triggered()
@@ -92,6 +109,7 @@ void MainWindow::on_actionOpen_Folder_triggered()
         image_path = dir.filePath(list.at(img_num)).toLocal8Bit().constData();
 
         ui->imgLabel->setPixmap(QPixmap::fromImage(image));
+//        ui->imgLabel->setPixmap(QPixmap::fromImage(image).scaled(ui->imgLabel->width(),ui->imgLabel->height(),Qt::KeepAspectRatio));
         QString size = " (" + QString::number(image.width()) + "," + QString::number(image.height()) + ")";
         ui->imgName->setText("Now Displaying: " + dir.filePath(list.at(img_num)) + size);
         connect(ui->imgLabel,SIGNAL(signalMouseClicked(QMouseEvent*)),this,SLOT(slotMouseSingleClicked(QMouseEvent*)));
@@ -99,7 +117,13 @@ void MainWindow::on_actionOpen_Folder_triggered()
 
         connect(ui->imgLabel,SIGNAL(signalMouseMovedWithRightClickDown(QRect)),this,SLOT(slotMouseMovedWithRightClickDown(QRect)));
         connect(ui->imgLabel,SIGNAL(signalNewRectangle(QRect)),this,SLOT(slotNewRectangleReceived(QRect)));
+        ui->actionZoom_In->setDisabled(false);
+        ui->actionZoom_Out->setDisabled(false);
+
+        labelWidth=image.width();
+        labelHeight=image.height();
     }
+
 }
 
 void MainWindow::on_actionExit_triggered()
@@ -122,7 +146,7 @@ void MainWindow::slotMouseSingleClicked(QMouseEvent *mouseEvent)
     {
         text="Right button clicked! x="+QString::number(x_co)+" ,y="+QString::number(y_co);
     }
-    ui->description->setText(text);
+    ui->description->setText(text);    
 
 }
 
@@ -137,10 +161,18 @@ void MainWindow::slotMouseDoubleClicked(QMouseEvent *mouseEvent)
 
 void MainWindow::slotMouseMovedWithRightClickDown(QRect rectangle)
 {
+    qDebug()<<ui->imgLabel->size();
     QString text="Drawing rectangle,...";
-    scaled=(QPixmap::fromImage(image)).scaled(ui->imgLabel->width(),ui->imgLabel->height());
+    scaled=(QPixmap::fromImage(image)).scaled(ui->imgLabel->width(),ui->imgLabel->height(),Qt::KeepAspectRatio);
     ui->description->setText(text);
-    QPainter paint;    
+
+    rect=rectangle;
+    if(!rect.isEmpty())
+    {
+        update();
+    }
+
+    QPainter paint;
     paint.begin(&scaled);
     paint.setBrush(Qt::blue);
     paint.setPen(Qt::blue);
@@ -149,7 +181,7 @@ void MainWindow::slotMouseMovedWithRightClickDown(QRect rectangle)
     paint.drawRect(rectangle);
     paint.end();
 
-    ui->imgLabel->setPixmap(scaled);
+    ui->imgLabel->setPixmap(scaled);    
 }
 
 void MainWindow::slotNewRectangleReceived(QRect rectangle)
@@ -245,4 +277,47 @@ void MainWindow::on_actionRead_Manual_triggered()
     Manual c;
     c.setModal(true);
     c.exec();
+}
+
+void MainWindow::on_actionZoom_In_triggered()
+{
+    scaleImage(1.25);    
+}
+
+void MainWindow::on_actionZoom_Out_triggered()
+{
+    scaleImage(0.80);
+}
+
+void MainWindow::scaleImage(double factor)
+{
+    qDebug()<<scaleFactor;
+    Q_ASSERT(ui->imgLabel->pixmap());
+    scaleFactor *= factor;
+    qDebug()<<scaleFactor;
+    qDebug()<<ui->imgLabel->size();
+
+qDebug()<<labelWidth;
+    ui->imgLabel->resize(labelWidth* scaleFactor, labelHeight* scaleFactor);
+    qDebug()<<ui->imgLabel->size();
+
+    ui->imgLabel->setPixmap(QPixmap::fromImage(image).scaled(ui->imgLabel->width(),ui->imgLabel->height(),Qt::KeepAspectRatio));
+
+    qDebug()<<ui->imgLabel->size();
+    adjustScrollBar(ui->scrollArea->horizontalScrollBar(),factor);
+    adjustScrollBar(ui->scrollArea->verticalScrollBar(),factor);
+
+    ui->actionZoom_In->setEnabled(scaleFactor < 3);
+    ui->actionZoom_Out->setEnabled(scaleFactor > 0.333);
+}
+
+void MainWindow::adjustScrollBar(QScrollBar *scrollBar, double factor)
+{
+    scrollBar->setValue(int(factor*scrollBar->value()+((factor-1)*scrollBar->pageStep()/2)));
+}
+
+void MainWindow::on_actionNormal_Size_triggered()
+{
+    ui->imgLabel->adjustSize();
+    scaleFactor=1;
 }
